@@ -7,7 +7,7 @@ You can find another different stle guide [here](https://www.sqlstyle.guide/) th
 
 This guide is released under [Creative Common SA](http://creativecommons.org/licenses/by-sa/4.0/)
 
-```SQL
+```sql
 with recursive
   fibo (level, n, m) as (
     select 0::int8 as level, 0::int8 as n, 1::int8 as m
@@ -50,25 +50,30 @@ List definitions like fields of a `select`, conditions, sort criteria or joined 
 
 Good:
 
-    select one, twenty_two as three, count(four) as fours…
-    select
-      one,
-      twenty_two as two,
-      count(four) as fours
-      case
-        when five = 0 then 'zero'
-        else 'something'
-      end as five,
+```sql
+select one, twenty_two as three, count(four) as fours…
+select
+  one,
+  twenty_two as two,
+  count(four) as fours
+  case
+    when five = 0 then 'zero'
+    else 'something'
+  end as five,
+```
 
 Avoid:
-    select one, twenty_two as three, count(four) as fours, case when five = 0 then 'zero' else 'something' end as five
-    -- ↑ this line is too long
-    select one, twenty_two as three
-      count(fours) as four, case
-        when five = 0 then 'zero'
-        else 'something'
-      end as five,
-    -- ↑ this line mixes inline and expanded style
+
+```sql
+select one, twenty_two as three, count(four) as fours, case when five = 0 then 'zero' else 'something' end as five
+-- ↑ this line is too long
+select one, twenty_two as three
+  count(fours) as four, case
+    when five = 0 then 'zero'
+    else 'something'
+  end as five,
+-- ↑ this line mixes inline and expanded style
+```
 
 Code blocks and indentation
 ===========================
@@ -100,9 +105,12 @@ limit 10
 The select statement is the first part of SQL queries and it defines the output projection of the query.
 If the fields are expanded on the lines below, the `select` keyword must be alone with `all` or `distinct` keywords if any:
 
-    select distinct on (report_id)
-      report_id,
-      …
+```sql
+select distinct on (report_day, report_count)
+  report_day,
+  report_count,
+  …
+```
 
 ## aliases
 
@@ -113,40 +121,46 @@ There are no enforcement about column aliasing except that all fields must have 
 
 In some cases, it may be more readable to tabulate aliases:
 
-    select
-      frstnm    as first_name,
-      lstnm     as last_name,
-      dob       as birthdate
-    from
-      student
+```sql
+select
+  frstnm    as first_name,
+  lstnm     as last_name,
+  dob       as birthdate
+from
+  student
+```
 
 Be aware maintaining this may become tedious with a growing list of fields as some field definition may exceed the chosen alias position:
 
-    select
-      frstnm    as first_name,
-      lstnm     as last_name,
-      dob       as birthdate,
-      count(examination)
-                as exam_total,
-      count(examination) filter (examination.is_success)
-                as exam_success,
-      count(examination) filter (not examination.is_success)
-                as exam_failed,
-    from
-      student
+```sql
+select
+  frstnm    as first_name,
+  lstnm     as last_name,
+  dob       as birthdate,
+  count(examination)
+            as exam_total,
+  count(examination) filter (examination.is_success)
+            as exam_success,
+  count(examination) filter (not examination.is_success)
+            as exam_failed,
+from
+  student
+```
 
 When using this technique all fields must be aliased to avoid gaps in the fields list.
 The example below:
 
-    select
-      frstnm as first_name,
-      lstnm as last_name,
-      dob as birthdate,
-      count(examination) as exam_total,
-      count(examination) filter (examination.is_success) as exam_success,
-      count(examination) filter (not examination.is_success) as exam_failed,
-    from
-      student
+```sql
+select
+  frstnm as first_name,
+  lstnm as last_name,
+  dob as birthdate,
+  count(examination) as exam_total,
+  count(examination) filter (examination.is_success) as exam_success,
+  count(examination) filter (not examination.is_success) as exam_failed,
+from
+  student
+```
 
 is also fine.
 
@@ -154,38 +168,42 @@ is also fine.
 
 `case when` definition may be inline if the line does not exceed 80 chars. It is advised to indent such blocks though:
 
+```sql
     select
       case when age >= 18 then 'over 18' else 'under 18' end as majority,
+```
 
 is ok but not as good as:
 
-    select
-      case
-        when age >= 18 then 'over 18'
-        else 'under 18'
-      end as majority
+```sql
+select
+  case
+    when age >= 18 then 'over 18'
+    else 'under 18'
+  end as majority
+```
 
 ## window definitions
 
 Window definitions may be also be inline or expanded:
 
-    select
-      departement_name,
-      employee_id,
-      salary,
-      rank() over (partition by departement_name order by salary desc) as ranking
+```sql
+select
+  departement_name,
+  employee_id,
+  salary,
+  rank() over (partition by departement_name order by salary desc) as ranking
+```
 
 is as good as
 
-    select
-      departement_name,
-      employee_id,
-      salary,
-      rank() over (
-        partition by departement_name
-        order by salary desc
-      ) as dept_salary_ranking
-
-
-
-      
+```sql
+select
+  departement_name,
+  employee_id,
+  salary,
+  rank() over (
+    partition by departement_name
+    order by salary desc
+  ) as dept_salary_ranking
+```
