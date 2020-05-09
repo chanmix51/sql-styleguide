@@ -50,7 +50,7 @@ List definitions like fields of a `select`, conditions, sort criteria or joined 
 
 Good:
 
-```sql
+```PLpgSQL
 select one, twenty_two as three, count(four) as fours…
 select
   one,
@@ -64,7 +64,7 @@ select
 
 Avoid:
 
-```sql
+```PLpgSQL
 select one, twenty_two as three, count(four) as fours, case when five = 0 then 'zero' else 'something' end as five
 -- ↑ this line is too long
 select one, twenty_two as three
@@ -84,7 +84,7 @@ A SQL query is divided in several parts that must be easily identifiable. The qu
 Queries as such are divided in the following parts:
 from / where / group by / having / select / window / order by / limit. These blocks are indented at the same level.
 
-```sql
+```PLpgSQL
 select student_id, first_name, last_name, age, count(examination) as count_exam
 from student
   left outer join examination
@@ -105,7 +105,7 @@ limit 10
 The select statement is the first part of SQL queries and it defines the output projection of the query.
 If the fields are expanded on the lines below, the `select` keyword must be alone with `all` or `distinct` keywords if any:
 
-```sql
+```PLpgSQL
 select distinct on (report_day, report_count)
   report_day,
   report_count,
@@ -123,7 +123,7 @@ There are no enforcement about column aliasing except that all fields must have 
 
 In some cases, it may be more readable to tabulate aliases:
 
-```sql
+```PLpgSQL
 select
   frstnm    as first_name,
   lstnm     as last_name,
@@ -134,7 +134,7 @@ from
 
 Be aware maintaining this may become tedious with a growing list of fields as some field definition may exceed the chosen alias position:
 
-```sql
+```PLpgSQL
 select
   frstnm    as first_name,
   lstnm     as last_name,
@@ -152,7 +152,7 @@ from
 When using this technique all fields must be aliased to avoid gaps in the fields list.
 The example below:
 
-```sql
+```PLpgSQL
 select
   frstnm as first_name,
   lstnm as last_name,
@@ -170,14 +170,14 @@ is also fine.
 
 `case when` definition may be inline if the line does not exceed 80 chars. It is advised to indent such blocks though:
 
-```sql
+```PLpgSQL
     select
       case when age >= 18 then 'over 18'::text else 'under 18'::text end as majority,
 ```
 
 is ok but not as good as:
 
-```sql
+```PLpgSQL
 select
   case
     when age >= 18 then 'over 18'::text
@@ -189,7 +189,7 @@ select
 
 Window definitions may be also be inline or expanded:
 
-```sql
+```PLpgSQL
 select
   departement_name,
   employee_id,
@@ -199,7 +199,7 @@ select
 
 is as good as
 
-```sql
+```PLpgSQL
 select
   departement_name,
   employee_id,
