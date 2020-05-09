@@ -7,7 +7,7 @@ You can find another different stle guide [here](https://www.sqlstyle.guide/) th
 
 This guide is released under [Creative Common SA](http://creativecommons.org/licenses/by-sa/4.0/)
 
-```sql
+```PLpgSQL
 with recursive
   fibo (level, n, m) as (
     select 0::int8 as level, 0::int8 as n, 1::int8 as m
@@ -112,12 +112,14 @@ select distinct on (report_day, report_count)
   …
 ```
 
-## aliases
+## aliases and type casting
 
 There are no enforcement about column aliasing except that all fields must have a unique and predictable name:
-    * explicitly alias anonymous fields: `select 0 as start`
+
+    * explicitly alias and cast anonymous fields: `select 0::integer as start`
     * explicitly alias function calls: `select count(*) as total_count`
     * explicitly alias conditional expressions: `select case … end as my_value`
+
 
 In some cases, it may be more readable to tabulate aliases:
 
@@ -170,7 +172,7 @@ is also fine.
 
 ```sql
     select
-      case when age >= 18 then 'over 18' else 'under 18' end as majority,
+      case when age >= 18 then 'over 18'::text else 'under 18'::text end as majority,
 ```
 
 is ok but not as good as:
@@ -178,8 +180,8 @@ is ok but not as good as:
 ```sql
 select
   case
-    when age >= 18 then 'over 18'
-    else 'under 18'
+    when age >= 18 then 'over 18'::text
+    else 'under 18'::text
   end as majority
 ```
 
